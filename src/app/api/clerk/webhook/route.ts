@@ -7,7 +7,7 @@ import { db } from "@/server/db";
 export const POST = async(req:Request)=>{
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const {data} = await req.json();
-    console.log(data);
+    
     const emailAddress = data.email_addresses[0].email_address;
     const firstName = data.first_name;
     const lastName = data.last_name;

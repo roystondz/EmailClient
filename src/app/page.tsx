@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui/button";
+
+import LinkButton from "@/components/ui/link-button";
 
 export default async function Home() {
-  return <Button>Click me</Button>;
+  return <LinkButton />;
 }
