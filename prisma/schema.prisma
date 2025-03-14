@@ -21,11 +21,12 @@ model User {
 
 model Account{
     id       String   @id @default(cuid())
-    userId   String
+    userId   String 
     token   String @unique
-    emailAddress String
+    emailAddress String 
     name String
 
+    nextDeltaToken String?
     user User @relation(fields: [userId], references: [id])
 
 }

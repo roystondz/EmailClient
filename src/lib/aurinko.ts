@@ -21,7 +21,9 @@ export const exchangeAurinkoCodeForToken = async (code: string) => {
     try{
         const response = await axios.post(`https://api.aurinko.io/v1/auth/token/${code}`, {},{
             auth: {
+                // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
                 username: process.env.AURINKO_CLIENT_ID as string,
+                // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
                 password: process.env.AURINKO_CLIENT_SECRET as string,
             },
         });
@@ -39,9 +41,6 @@ export const exchangeAurinkoCodeForToken = async (code: string) => {
         
     }
 }
-
-
-
 
 
 export const getAurinkoUserInfo = async (token: string) => {
@@ -65,3 +64,4 @@ export const getAurinkoUserInfo = async (token: string) => {
         throw new Error('Unable to get user info');
     }
 }
+

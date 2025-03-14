@@ -3,6 +3,9 @@ import { db } from "@/server/db";
 import { auth } from "@clerk/nextjs/server";
 import { get } from "http";
 import { NextRequest, NextResponse } from "next/server";
+import { waitUntil } from "@vercel/functions";
+import axios from "axios";
+
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const GET =async (req:NextRequest)=>{
@@ -21,20 +24,35 @@ export const GET =async (req:NextRequest)=>{
     const accountDetails  = await getAurinkoUserInfo(token.accessToken);
     if(!accountDetails) return NextResponse.json('Unable to get account details', {status: 400});
     
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     await db.account.upsert({
-        where:{
-            id: token.accountId.toString()
-
-        },
-        update:{
-            token: token.accessToken,
-        },create:{
+        create:{
             id: token.accountId.toString(),
             token: token.accessToken,
             userId,
             emailAddress: accountDetails.email,
             name: accountDetails.name,
+        },
+        update:{
+            token: token.accessToken,
+        },
+        where:{
+            id: token.accountId.toString()
         }
+        
     })
-    return  NextResponse.redirect(new URL('/email', req.url));
+
+    waitUntil(
+        axios.post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync`,{
+            accountId: token.accountId.toString(),
+            userId,
+        }).then((response)=>{
+            console.log(response.data);
+        }).catch((error)=>{
+            console.error(error);
+            console.log('Error syncing account');
+        })
+    );
+
+    return  NextResponse.redirect(new URL('/mail', req.url));
 }

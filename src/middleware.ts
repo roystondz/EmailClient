@@ -3,7 +3,8 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 const isPublicRoute = createRouteMatcher([
     '/sign-in(.*)',
     '/sign-up(.*)',
-    '/api/clerk/webhook(.*)', // Add this line to the array of public routes to allow the webhook to bypass the middleware and be accessible by Clerk
+    '/api/clerk/webhook(.*)',
+    '/api/initial-sync(.*)' // Add this line to the array of public routes to allow the webhook to bypass the middleware and be accessible by Clerk
   ])
   
   export default clerkMiddleware(async (auth, request) => {
