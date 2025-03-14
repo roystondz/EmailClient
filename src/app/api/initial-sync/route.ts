@@ -2,6 +2,7 @@
 import { Account } from "@/lib/accounts";
 import { db } from "@/server/db";
 import { NextRequest, NextResponse } from "next/server";
+import { syncEmailsToDatabase } from "@/lib/sync-to-db";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -40,7 +41,8 @@ export const POST = async (req: NextRequest) => {
       data: { nextDeltaToken: storedDeltaToken },
     });
     */
-
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    await syncEmailsToDatabase(allEmails, accountId);
     return NextResponse.json('Initial sync complete', { status: 200 });
 
   } catch (error) {
